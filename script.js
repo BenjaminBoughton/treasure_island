@@ -1,4 +1,4 @@
-// Simple two-layer design with rotated text and subdivided section
+// Simple two-layer design with rotated text
 const width = 800;
 const height = 600;
 const centerX = width / 2;
@@ -133,57 +133,21 @@ sections.forEach((section, index) => {
         .text(section.text2);
 });
 
-// Add subdivision within Emily's section for Jim Carruthers
-// Emily's section is from Math.PI to 3 * Math.PI / 2
+// Add Jim Carruthers text - simple, no extra lines
+// Position it in Emily's section area
 const emilySectionStart = Math.PI;
 const emilySectionEnd = 3 * Math.PI / 2;
+const jimAngle = emilySectionStart + (emilySectionEnd - emilySectionStart) * 0.8; // 80% through Emily's section
+const jimTextRadius = (innerRadius + outerRadius) / 2;
+const jimTextX = centerX + jimTextRadius * Math.cos(jimAngle - Math.PI / 2);
+const jimTextY = centerY + jimTextRadius * Math.sin(jimAngle - Math.PI / 2);
 
-// Create subdivision for Jim Carruthers within Emily's section
-const jimSubdivisionStart = emilySectionStart + (emilySectionEnd - emilySectionStart) * 0.7; // 70% through Emily's section
-const jimSubdivisionEnd = emilySectionEnd;
-
-// Draw the subdivision arc - only goes halfway down (to middle radius)
-const middleRadius = (innerRadius + outerRadius) / 2;
-const jimArc = d3.arc()
-    .innerRadius(innerRadius)
-    .outerRadius(middleRadius) // Only goes to middle, not full outer radius
-    .startAngle(jimSubdivisionStart)
-    .endAngle(jimSubdivisionEnd);
-
-svg.append('path')
-    .attr('d', jimArc)
-    .attr('transform', `translate(${centerX}, ${centerY})`)
-    .attr('fill', 'white')
-    .attr('stroke', '#333')
-    .attr('stroke-width', 2);
-
-// Add ONE radial line to separate Jim's subdivision - from center circle to halfway down
-const jimRadialAngle = jimSubdivisionStart;
-const radialStartX = centerX + innerRadius * Math.cos(jimRadialAngle - Math.PI / 2);
-const radialStartY = centerY + innerRadius * Math.sin(jimRadialAngle - Math.PI / 2);
-const radialEndX = centerX + middleRadius * Math.cos(jimRadialAngle - Math.PI / 2);
-const radialEndY = centerY + middleRadius * Math.sin(jimRadialAngle - Math.PI / 2);
-
-svg.append('line')
-    .attr('x1', radialStartX)
-    .attr('y1', radialStartY)
-    .attr('x2', radialEndX)
-    .attr('y2', radialEndY)
-    .attr('stroke', '#333')
-    .attr('stroke-width', 2);
-
-// Add Jim Carruthers text - HORIZONTAL and flush with the divider line above
-const jimMidAngle = (jimSubdivisionStart + jimSubdivisionEnd) / 2;
-const jimTextRadius = innerRadius + 15; // Position just below the divider line
-const jimTextX = centerX + jimTextRadius * Math.cos(jimMidAngle - Math.PI / 2);
-const jimTextY = centerY + jimTextRadius * Math.sin(jimMidAngle - Math.PI / 2);
-
-// No rotation - keep text horizontal and flush with divider
+// Simple horizontal text
 svg.append('text')
     .attr('x', jimTextX)
     .attr('y', jimTextY)
     .attr('text-anchor', 'middle')
-    .attr('dominant-baseline', 'hanging') // Use hanging baseline to align with divider line
+    .attr('dominant-baseline', 'middle')
     .attr('font-family', 'Arial, sans-serif')
     .attr('font-size', '10px')
     .attr('font-weight', 'bold')
