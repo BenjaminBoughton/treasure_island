@@ -1,4 +1,4 @@
-// Simple two-layer design with rotated text
+// Simple two-layer design with rotated text and additional spouse
 const width = 800;
 const height = 600;
 const centerX = width / 2;
@@ -42,7 +42,7 @@ svg.append('text')
     .attr('fill', '#333')
     .text('Sarah Annis Withenbury');
 
-// Define the four sections
+// Define the four main sections plus additional spouse
 const sections = [
     { 
         startAngle: 0, 
@@ -70,9 +70,17 @@ const sections = [
     }
 ];
 
-// Draw the four sections with rotated text
-const outerRadius = 220; // Increased height for better text spacing
-const innerRadius = 120; // Same as center circle radius
+// Additional spouse section for Emily
+const additionalSpouse = {
+    startAngle: 3 * Math.PI / 2 + (Math.PI / 2) * 0.7, // Position after Emily's section
+    endAngle: 3 * Math.PI / 2 + (Math.PI / 2) * 0.9,   // Smaller section
+    text1: 'Jim Carruthers',
+    text2: ''
+};
+
+// Draw the four main sections with rotated text
+const outerRadius = 220;
+const innerRadius = 120;
 
 sections.forEach((section, index) => {
     // Create arc path that starts from center circle edge
@@ -101,7 +109,7 @@ sections.forEach((section, index) => {
     
     // Adjust rotation for readability
     if (rotationAngle > 90 && rotationAngle < 270) {
-        rotationAngle += 180; // Flip text for bottom sections
+        rotationAngle += 180;
     }
     
     // Create text group with rotation
@@ -132,3 +140,42 @@ sections.forEach((section, index) => {
         .attr('fill', '#333')
         .text(section.text2);
 });
+
+// Draw additional spouse section
+const additionalArc = d3.arc()
+    .innerRadius(innerRadius)
+    .outerRadius(outerRadius)
+    .startAngle(additionalSpouse.startAngle)
+    .endAngle(additionalSpouse.endAngle);
+
+svg.append('path')
+    .attr('d', additionalArc)
+    .attr('transform', `translate(${centerX}, ${centerY})`)
+    .attr('fill', 'white')
+    .attr('stroke', '#333')
+    .attr('stroke-width', 2);
+
+// Add text for additional spouse
+const additionalMidAngle = (additionalSpouse.startAngle + additionalSpouse.endAngle) / 2;
+const additionalTextRadius = (innerRadius + outerRadius) / 2;
+const additionalTextX = centerX + additionalTextRadius * Math.cos(additionalMidAngle - Math.PI / 2);
+const additionalTextY = centerY + additionalTextRadius * Math.sin(additionalMidAngle - Math.PI / 2);
+
+let additionalRotationAngle = (additionalMidAngle * 180 / Math.PI);
+if (additionalRotationAngle > 90 && additionalRotationAngle < 270) {
+    additionalRotationAngle += 180;
+}
+
+const additionalTextGroup = svg.append('g')
+    .attr('transform', `translate(${additionalTextX}, ${additionalTextY}) rotate(${additionalRotationAngle})`);
+
+additionalTextGroup.append('text')
+    .attr('x', 0)
+    .attr('y', 0)
+    .attr('text-anchor', 'middle')
+    .attr('dominant-baseline', 'middle')
+    .attr('font-family', 'Arial, sans-serif')
+    .attr('font-size', '11px')
+    .attr('font-weight', 'bold')
+    .attr('fill', '#333')
+    .text(additionalSpouse.text1);
