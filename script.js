@@ -140,10 +140,13 @@ const jimTextRadius = (innerRadius + outerRadius) / 2; // Middle of the section
 const jimTextX = centerX + jimTextRadius * Math.cos(emilyCoombsDividerAngle - Math.PI / 2);
 const jimTextY = centerY + jimTextRadius * Math.sin(emilyCoombsDividerAngle - Math.PI / 2) + 15; // Add buffer below the line
 
-// Simple horizontal text
-svg.append('text')
-    .attr('x', jimTextX)
-    .attr('y', jimTextY)
+// Create text group with 90 degrees clockwise rotation
+const jimTextGroup = svg.append('g')
+    .attr('transform', `translate(${jimTextX}, ${jimTextY}) rotate(90)`);
+
+jimTextGroup.append('text')
+    .attr('x', 0)
+    .attr('y', 0)
     .attr('text-anchor', 'middle')
     .attr('dominant-baseline', 'middle')
     .attr('font-family', 'Arial, sans-serif')
