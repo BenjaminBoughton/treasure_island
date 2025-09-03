@@ -133,12 +133,12 @@ sections.forEach((section, index) => {
         .text(section.text2);
 });
 
-// Add Jim Carruthers text - positioned just below the boundary line with a buffer
-// The boundary line is at angle 3 * Math.PI / 2 (270 degrees)
-const boundaryAngle = 3 * Math.PI / 2; // This is the line between Emily and Althea sections
+// Add Jim Carruthers text - positioned at the divider between Emily and Coombs sections
+// The divider between Emily and Coombs is at angle Math.PI (180 degrees)
+const emilyCoombsDividerAngle = Math.PI; // This is the line between Emily and Coombs sections
 const jimTextRadius = (innerRadius + outerRadius) / 2; // Middle of the section
-const jimTextX = centerX + jimTextRadius * Math.cos(boundaryAngle - Math.PI / 2);
-const jimTextY = centerY + jimTextRadius * Math.sin(boundaryAngle - Math.PI / 2) + 15; // Add buffer below the line
+const jimTextX = centerX + jimTextRadius * Math.cos(emilyCoombsDividerAngle - Math.PI / 2);
+const jimTextY = centerY + jimTextRadius * Math.sin(emilyCoombsDividerAngle - Math.PI / 2) + 15; // Add buffer below the line
 
 // Simple horizontal text
 svg.append('text')
@@ -153,9 +153,8 @@ svg.append('text')
     .text('Jim Carruthers');
 
 // Add ONE radial line from center circle halfway down Emily's section, right under Jim Carruthers
-const emilySectionStart = Math.PI;
-const emilySectionEnd = 3 * Math.PI / 2;
-const jimAngle = emilySectionStart + (emilySectionEnd - emilySectionStart) * 0.8; // 80% through Emily's section (where Jim is positioned)
+// Line positioned at the Emily/Coombs divider to show chronological order
+const jimAngle = emilyCoombsDividerAngle; // Same angle as the divider
 
 // Line starts from center circle edge and goes halfway down Emily's section
 const lineStartX = centerX + innerRadius * Math.cos(jimAngle - Math.PI / 2);
