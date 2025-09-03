@@ -157,7 +157,7 @@ svg.append('path')
     .attr('stroke', '#333')
     .attr('stroke-width', 2);
 
-// Add radial line to separate Jim's subdivision - only goes halfway down
+// Add ONE radial line to separate Jim's subdivision - from center circle to halfway down
 const jimRadialAngle = jimSubdivisionStart;
 const radialStartX = centerX + innerRadius * Math.cos(jimRadialAngle - Math.PI / 2);
 const radialStartY = centerY + innerRadius * Math.sin(jimRadialAngle - Math.PI / 2);
@@ -172,18 +172,18 @@ svg.append('line')
     .attr('stroke', '#333')
     .attr('stroke-width', 2);
 
-// Add Jim Carruthers text - HORIZONTAL (no rotation)
+// Add Jim Carruthers text - HORIZONTAL and flush with the divider line above
 const jimMidAngle = (jimSubdivisionStart + jimSubdivisionEnd) / 2;
-const jimTextRadius = (innerRadius + middleRadius) / 2;
+const jimTextRadius = innerRadius + 15; // Position just below the divider line
 const jimTextX = centerX + jimTextRadius * Math.cos(jimMidAngle - Math.PI / 2);
 const jimTextY = centerY + jimTextRadius * Math.sin(jimMidAngle - Math.PI / 2);
 
-// No rotation - keep text horizontal
+// No rotation - keep text horizontal and flush with divider
 svg.append('text')
     .attr('x', jimTextX)
     .attr('y', jimTextY)
     .attr('text-anchor', 'middle')
-    .attr('dominant-baseline', 'middle')
+    .attr('dominant-baseline', 'hanging') // Use hanging baseline to align with divider line
     .attr('font-family', 'Arial, sans-serif')
     .attr('font-size', '10px')
     .attr('font-weight', 'bold')
