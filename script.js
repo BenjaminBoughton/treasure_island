@@ -1,4 +1,4 @@
-// Simple two-layer design with rotated text and additional spouse
+// Simple two-layer design with rotated text and subdivided section
 const width = 800;
 const height = 600;
 const centerX = width / 2;
@@ -42,7 +42,7 @@ svg.append('text')
     .attr('fill', '#333')
     .text('Sarah Annis Withenbury');
 
-// Define the four main sections plus additional spouse
+// Define the four main sections
 const sections = [
     { 
         startAngle: 0, 
@@ -69,14 +69,6 @@ const sections = [
         text2: 'Roland Richardson' 
     }
 ];
-
-// Additional spouse section for Emily
-const additionalSpouse = {
-    startAngle: 3 * Math.PI / 2 + (Math.PI / 2) * 0.7, // Position after Emily's section
-    endAngle: 3 * Math.PI / 2 + (Math.PI / 2) * 0.9,   // Smaller section
-    text1: 'Jim Carruthers',
-    text2: ''
-};
 
 // Draw the four main sections with rotated text
 const outerRadius = 220;
@@ -141,41 +133,65 @@ sections.forEach((section, index) => {
         .text(section.text2);
 });
 
-// Draw additional spouse section
-const additionalArc = d3.arc()
+// Add subdivision within Emily's section for Jim Carruthers
+// Emily's section is from Math.PI to 3 * Math.PI / 2
+const emilySectionStart = Math.PI;
+const emilySectionEnd = 3 * Math.PI / 2;
+
+// Create subdivision for Jim Carruthers within Emily's section
+const jimSubdivisionStart = emilySectionStart + (emilySectionEnd - emilySectionStart) * 0.7; // 70% through Emily's section
+const jimSubdivisionEnd = emilySectionEnd;
+
+// Draw the subdivision arc
+const jimArc = d3.arc()
     .innerRadius(innerRadius)
     .outerRadius(outerRadius)
-    .startAngle(additionalSpouse.startAngle)
-    .endAngle(additionalSpouse.endAngle);
+    .startAngle(jimSubdivisionStart)
+    .endAngle(jimSubdivisionEnd);
 
 svg.append('path')
-    .attr('d', additionalArc)
+    .attr('d', jimArc)
     .attr('transform', `translate(${centerX}, ${centerY})`)
     .attr('fill', 'white')
     .attr('stroke', '#333')
     .attr('stroke-width', 2);
 
-// Add text for additional spouse
-const additionalMidAngle = (additionalSpouse.startAngle + additionalSpouse.endAngle) / 2;
-const additionalTextRadius = (innerRadius + outerRadius) / 2;
-const additionalTextX = centerX + additionalTextRadius * Math.cos(additionalMidAngle - Math.PI / 2);
-const additionalTextY = centerY + additionalTextRadius * Math.sin(additionalMidAngle - Math.PI / 2);
+// Add radial line to separate Jim's subdivision
+const jimRadialAngle = jimSubdivisionStart;
+const radialStartX = centerX + innerRadius * Math.cos(jimRadialAngle - Math.PI / 2);
+const radialStartY = centerY + innerRadius * Math.sin(jimRadialAngle - Math.PI / 2);
+const radialEndX = centerX + outerRadius * Math.cos(jimRadialAngle - Math.PI / 2);
+const radialEndY = centerY + outerRadius * Math.sin(jimRadialAngle - Math.PI / 2);
 
-let additionalRotationAngle = (additionalMidAngle * 180 / Math.PI);
-if (additionalRotationAngle > 90 && additionalRotationAngle < 270) {
-    additionalRotationAngle += 180;
+svg.append('line')
+    .attr('x1', radialStartX)
+    .attr('y1', radialStartY)
+    .attr('x2', radialEndX)
+    .attr('y2', radialEndY)
+    .attr('stroke', '#333')
+    .attr('stroke-width', 2);
+
+// Add Jim Carruthers text in the subdivision
+const jimMidAngle = (jimSubdivisionStart + jimSubdivisionEnd) / 2;
+const jimTextRadius = (innerRadius + outerRadius) / 2;
+const jimTextX = centerX + jimTextRadius * Math.cos(jimMidAngle - Math.PI / 2);
+const jimTextY = centerY + jimTextRadius * Math.sin(jimMidAngle - Math.PI / 2);
+
+let jimRotationAngle = (jimMidAngle * 180 / Math.PI);
+if (jimRotationAngle > 90 && jimRotationAngle < 270) {
+    jimRotationAngle += 180;
 }
 
-const additionalTextGroup = svg.append('g')
-    .attr('transform', `translate(${additionalTextX}, ${additionalTextY}) rotate(${additionalRotationAngle})`);
+const jimTextGroup = svg.append('g')
+    .attr('transform', `translate(${jimTextX}, ${jimTextY}) rotate(${jimRotationAngle})`);
 
-additionalTextGroup.append('text')
+jimTextGroup.append('text')
     .attr('x', 0)
     .attr('y', 0)
     .attr('text-anchor', 'middle')
     .attr('dominant-baseline', 'middle')
     .attr('font-family', 'Arial, sans-serif')
-    .attr('font-size', '11px')
+    .attr('font-size', '10px')
     .attr('font-weight', 'bold')
     .attr('fill', '#333')
-    .text(additionalSpouse.text1);
+    .text('Jim Carruthers');
