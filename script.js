@@ -151,3 +151,22 @@ svg.append('text')
     .attr('font-weight', 'bold')
     .attr('fill', '#333')
     .text('Jim Carruthers');
+
+// Add ONE radial line from center circle halfway down Emily's section, right under Jim Carruthers
+const emilySectionStart = Math.PI;
+const emilySectionEnd = 3 * Math.PI / 2;
+const jimAngle = emilySectionStart + (emilySectionEnd - emilySectionStart) * 0.8; // 80% through Emily's section (where Jim is positioned)
+
+// Line starts from center circle edge and goes halfway down Emily's section
+const lineStartX = centerX + innerRadius * Math.cos(jimAngle - Math.PI / 2);
+const lineStartY = centerY + innerRadius * Math.sin(jimAngle - Math.PI / 2);
+const lineEndX = centerX + (innerRadius + (outerRadius - innerRadius) / 2) * Math.cos(jimAngle - Math.PI / 2);
+const lineEndY = centerY + (innerRadius + (outerRadius - innerRadius) / 2) * Math.sin(jimAngle - Math.PI / 2);
+
+svg.append('line')
+    .attr('x1', lineStartX)
+    .attr('y1', lineStartY)
+    .attr('x2', lineEndX)
+    .attr('y2', lineEndY)
+    .attr('stroke', '#333')
+    .attr('stroke-width', 2);
