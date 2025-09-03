@@ -155,11 +155,11 @@ jimTextGroup.append('text')
     .attr('fill', '#333')
     .text('Jim Carruthers');
 
-// Add vertical line from center circle down halfway to outer edge of Emily's section, right under Jim text
-// Line positioned at the same x-coordinate as Jim's text
-const lineStartX = jimTextX; // Same x as Jim's text
+// Add vertical line from center circle down halfway to outer edge of Emily's section, positioned to the left of Jim text
+// Line positioned to the left of Jim's text (negative x direction)
+const lineStartX = jimTextX - 15; // Move line 15px to the left of Jim's text
 const lineStartY = centerY + innerRadius; // Start from center circle edge
-const lineEndX = jimTextX; // Same x as Jim's text
+const lineEndX = jimTextX - 15; // Same x as start
 const lineEndY = centerY + (innerRadius + (outerRadius - innerRadius) / 2); // Halfway to outer edge
 
 svg.append('line')
