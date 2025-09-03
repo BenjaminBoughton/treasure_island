@@ -133,12 +133,12 @@ sections.forEach((section, index) => {
         .text(section.text2);
 });
 
-// Add Jim Carruthers text - positioned at the divider between Emily and Coombs sections with buffer
-// The divider between Emily and Coombs is at angle Math.PI (180 degrees)
+// Add Jim Carruthers text - positioned ON the existing dividing line between Emily and Coombs sections
+// The dividing line between Emily and Coombs is at angle Math.PI (180 degrees)
 const emilyCoombsDividerAngle = Math.PI; // This is the line between Emily and Coombs sections
 const jimTextRadius = (innerRadius + outerRadius) / 2; // Middle of the section
 const jimTextX = centerX + jimTextRadius * Math.cos(emilyCoombsDividerAngle - Math.PI / 2);
-const jimTextY = centerY + jimTextRadius * Math.sin(emilyCoombsDividerAngle - Math.PI / 2) + 15; // Add buffer below the line
+const jimTextY = centerY + jimTextRadius * Math.sin(emilyCoombsDividerAngle - Math.PI / 2);
 
 // Create text group with 90 degrees clockwise rotation
 const jimTextGroup = svg.append('g')
@@ -154,21 +154,3 @@ jimTextGroup.append('text')
     .attr('font-weight', 'bold')
     .attr('fill', '#333')
     .text('Jim Carruthers');
-
-// Add radial line from center circle down to halfway through Emily's section
-// This creates the subdivision within Emily's section
-const jimAngle = emilyCoombsDividerAngle; // Same angle as the divider
-
-// Line starts from center circle edge and goes halfway down Emily's section
-const lineStartX = centerX + innerRadius * Math.cos(jimAngle - Math.PI / 2);
-const lineStartY = centerY + innerRadius * Math.sin(jimAngle - Math.PI / 2);
-const lineEndX = centerX + (innerRadius + (outerRadius - innerRadius) / 2) * Math.cos(jimAngle - Math.PI / 2);
-const lineEndY = centerY + (innerRadius + (outerRadius - innerRadius) / 2) * Math.sin(jimAngle - Math.PI / 2);
-
-svg.append('line')
-    .attr('x1', lineStartX)
-    .attr('y1', lineStartY)
-    .attr('x2', lineEndX)
-    .attr('y2', lineEndY)
-    .attr('stroke', '#333')
-    .attr('stroke-width', 2);
