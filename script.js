@@ -137,7 +137,7 @@ sections.forEach((section, index) => {
 // The dividing line between Emily and Coombs is at angle Math.PI (180 degrees)
 const emilyCoombsDividerAngle = Math.PI; // This is the line between Emily and Coombs sections
 const jimTextRadius = (innerRadius + outerRadius) / 2; // Middle of the section
-const jimTextX = centerX + jimTextRadius * Math.cos(emilyCoombsDividerAngle - Math.PI / 2);
+const jimTextX = centerX + jimTextRadius * Math.cos(emilyCoombsDividerAngle - Math.PI / 2) - 10; // Add -10 for leftward buffer
 const jimTextY = centerY + jimTextRadius * Math.sin(emilyCoombsDividerAngle - Math.PI / 2);
 
 // Create text group with 90 degrees clockwise rotation
