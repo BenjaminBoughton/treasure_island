@@ -70,12 +70,12 @@ const sections = [
     }
 ];
 
-// Draw the four sections
+// Draw the four sections - NO inner radius, so they connect directly to center circle
 const outerRadius = 200;
-const innerRadius = 140;
+const innerRadius = 120; // Same as center circle radius
 
 sections.forEach((section, index) => {
-    // Create arc path
+    // Create arc path that starts from center circle edge
     const arc = d3.arc()
         .innerRadius(innerRadius)
         .outerRadius(outerRadius)
