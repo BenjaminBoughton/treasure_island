@@ -133,12 +133,12 @@ sections.forEach((section, index) => {
         .text(section.text2);
 });
 
-// Add Jim Carruthers text - positioned at the divider between Emily and Coombs sections
+// Add Jim Carruthers text - positioned at the divider between Emily and Coombs sections with buffer
 // The divider between Emily and Coombs is at angle Math.PI (180 degrees)
 const emilyCoombsDividerAngle = Math.PI; // This is the line between Emily and Coombs sections
 const jimTextRadius = (innerRadius + outerRadius) / 2; // Middle of the section
 const jimTextX = centerX + jimTextRadius * Math.cos(emilyCoombsDividerAngle - Math.PI / 2);
-const jimTextY = centerY + jimTextRadius * Math.sin(emilyCoombsDividerAngle - Math.PI / 2) + 15; // Add buffer below the line
+const jimTextY = centerY + jimTextRadius * Math.sin(emilyCoombsDividerAngle - Math.PI / 2) + 25; // Add more buffer below the line
 
 // Create text group with 90 degrees clockwise rotation
 const jimTextGroup = svg.append('g')
@@ -155,15 +155,15 @@ jimTextGroup.append('text')
     .attr('fill', '#333')
     .text('Jim Carruthers');
 
-// Add ONE radial line from center circle halfway down Emily's section, right under Jim Carruthers
-// Line positioned at the Emily/Coombs divider to show chronological order
+// Add radial line from center circle down to Jim Carruthers position
+// Line starts from center circle edge and goes to where Jim Carruthers is positioned
 const jimAngle = emilyCoombsDividerAngle; // Same angle as the divider
 
-// Line starts from center circle edge and goes halfway down Emily's section
+// Line starts from center circle edge and goes to Jim's position
 const lineStartX = centerX + innerRadius * Math.cos(jimAngle - Math.PI / 2);
 const lineStartY = centerY + innerRadius * Math.sin(jimAngle - Math.PI / 2);
-const lineEndX = centerX + (innerRadius + (outerRadius - innerRadius) / 2) * Math.cos(jimAngle - Math.PI / 2);
-const lineEndY = centerY + (innerRadius + (outerRadius - innerRadius) / 2) * Math.sin(jimAngle - Math.PI / 2);
+const lineEndX = centerX + jimTextRadius * Math.cos(jimAngle - Math.PI / 2);
+const lineEndY = centerY + jimTextRadius * Math.sin(jimAngle - Math.PI / 2);
 
 svg.append('line')
     .attr('x1', lineStartX)
