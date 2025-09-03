@@ -142,10 +142,11 @@ const emilySectionEnd = 3 * Math.PI / 2;
 const jimSubdivisionStart = emilySectionStart + (emilySectionEnd - emilySectionStart) * 0.7; // 70% through Emily's section
 const jimSubdivisionEnd = emilySectionEnd;
 
-// Draw the subdivision arc
+// Draw the subdivision arc - only goes halfway down (to middle radius)
+const middleRadius = (innerRadius + outerRadius) / 2;
 const jimArc = d3.arc()
     .innerRadius(innerRadius)
-    .outerRadius(outerRadius)
+    .outerRadius(middleRadius) // Only goes to middle, not full outer radius
     .startAngle(jimSubdivisionStart)
     .endAngle(jimSubdivisionEnd);
 
@@ -156,12 +157,12 @@ svg.append('path')
     .attr('stroke', '#333')
     .attr('stroke-width', 2);
 
-// Add radial line to separate Jim's subdivision
+// Add radial line to separate Jim's subdivision - only goes halfway down
 const jimRadialAngle = jimSubdivisionStart;
 const radialStartX = centerX + innerRadius * Math.cos(jimRadialAngle - Math.PI / 2);
 const radialStartY = centerY + innerRadius * Math.sin(jimRadialAngle - Math.PI / 2);
-const radialEndX = centerX + outerRadius * Math.cos(jimRadialAngle - Math.PI / 2);
-const radialEndY = centerY + outerRadius * Math.sin(jimRadialAngle - Math.PI / 2);
+const radialEndX = centerX + middleRadius * Math.cos(jimRadialAngle - Math.PI / 2);
+const radialEndY = centerY + middleRadius * Math.sin(jimRadialAngle - Math.PI / 2);
 
 svg.append('line')
     .attr('x1', radialStartX)
@@ -171,23 +172,16 @@ svg.append('line')
     .attr('stroke', '#333')
     .attr('stroke-width', 2);
 
-// Add Jim Carruthers text in the subdivision
+// Add Jim Carruthers text - HORIZONTAL (no rotation)
 const jimMidAngle = (jimSubdivisionStart + jimSubdivisionEnd) / 2;
-const jimTextRadius = (innerRadius + outerRadius) / 2;
+const jimTextRadius = (innerRadius + middleRadius) / 2;
 const jimTextX = centerX + jimTextRadius * Math.cos(jimMidAngle - Math.PI / 2);
 const jimTextY = centerY + jimTextRadius * Math.sin(jimMidAngle - Math.PI / 2);
 
-let jimRotationAngle = (jimMidAngle * 180 / Math.PI);
-if (jimRotationAngle > 90 && jimRotationAngle < 270) {
-    jimRotationAngle += 180;
-}
-
-const jimTextGroup = svg.append('g')
-    .attr('transform', `translate(${jimTextX}, ${jimTextY}) rotate(${jimRotationAngle})`);
-
-jimTextGroup.append('text')
-    .attr('x', 0)
-    .attr('y', 0)
+// No rotation - keep text horizontal
+svg.append('text')
+    .attr('x', jimTextX)
+    .attr('y', jimTextY)
     .attr('text-anchor', 'middle')
     .attr('dominant-baseline', 'middle')
     .attr('font-family', 'Arial, sans-serif')
