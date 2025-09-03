@@ -1,13 +1,13 @@
-// Family Tree Data
+// Family Tree Data - Radial Layout
 const familyData = {
     parents: [
-        { id: 'mom', name: 'Slagathora', role: 'Mother', x: 0, y: 0 },
-        { id: 'dad', name: 'Slagathoro', role: 'Father', x: 0, y: 0 }
+        { id: 'mom', name: 'Slagathora', role: 'Mother' },
+        { id: 'dad', name: 'Slagathoro', role: 'Father' }
     ],
     children: [
-        { id: 'kid1', name: 'Kid 1', role: 'Child', x: 0, y: 0 },
-        { id: 'kid2', name: 'Kid 2', role: 'Child', x: 0, y: 0 },
-        { id: 'kid3', name: 'Kid 3', role: 'Child', x: 0, y: 0 }
+        { id: 'kid1', name: 'Kid 1', role: 'Child' },
+        { id: 'kid2', name: 'Kid 2', role: 'Child' },
+        { id: 'kid3', name: 'Kid 3', role: 'Child' }
     ]
 };
 
@@ -28,18 +28,11 @@ const tooltip = d3.select('body')
     .append('div')
     .attr('class', 'tooltip');
 
-// Calculate positions for concentric circles
+// Calculate positions for radial layout
 function calculatePositions() {
-    const parentRadius = 80;
-    const childRadius = 150;
+    const childRadius = 120;
     
-    // Position parents in center (side by side)
-    familyData.parents[0].x = centerX - 40;
-    familyData.parents[0].y = centerY;
-    familyData.parents[1].x = centerX + 40;
-    familyData.parents[1].y = centerY;
-    
-    // Position children in outer circle
+    // Position children in perfect circle around center
     familyData.children.forEach((child, index) => {
         const angle = (index * 2 * Math.PI) / familyData.children.length;
         child.x = centerX + childRadius * Math.cos(angle - Math.PI / 2);
@@ -47,37 +40,41 @@ function calculatePositions() {
     });
 }
 
-// Draw connection lines from parents to children
+// Draw radial connection lines from center to children
 function drawConnections() {
     const connections = svg.selectAll('.connection-line')
         .data(familyData.children)
         .enter()
-        .append('path')
+        .append('line')
         .attr('class', 'connection-line')
-        .attr('d', (d) => {
-            const parentX = centerX;
-            const parentY = centerY;
-            return `M ${parentX} ${parentY} L ${d.x} ${d.y}`;
-        })
+        .attr('x1', centerX)
+        .attr('y1', centerY)
+        .attr('x2', centerX)
+        .attr('y2', centerY)
         .style('opacity', 0)
         .transition()
         .duration(800)
         .delay((d, i) => i * 200)
-        .style('opacity', 0.7);
+        .attr('x2', (d) => d.x)
+        .attr('y2', (d) => d.y)
+        .style('opacity', 0.8);
 }
 
 // Draw family members
 function drawFamilyMembers() {
-    // Draw parents
+    // Draw parents in center (overlapping slightly)
     const parents = svg.selectAll('.parent')
         .data(familyData.parents)
         .enter()
         .append('g')
         .attr('class', 'family-member parent')
-        .attr('transform', (d) => `translate(${d.x}, ${d.y})`);
+        .attr('transform', (d, i) => {
+            const offsetX = i === 0 ? -25 : 25;
+            return `translate(${centerX + offsetX}, ${centerY})`;
+        });
 
     parents.append('circle')
-        .attr('r', 35)
+        .attr('r', 30)
         .attr('class', 'parents')
         .style('opacity', 0)
         .transition()
@@ -86,7 +83,7 @@ function drawFamilyMembers() {
         .style('opacity', 1);
 
     parents.append('text')
-        .attr('class', 'member-text')
+        .attr('class', 'member-text parent-text')
         .attr('dy', -5)
         .text((d) => d.name)
         .style('opacity', 0)
@@ -96,8 +93,8 @@ function drawFamilyMembers() {
         .style('opacity', 1);
 
     parents.append('text')
-        .attr('class', 'member-text')
-        .attr('dy', 15)
+        .attr('class', 'member-text parent-role')
+        .attr('dy', 12)
         .attr('font-size', '10px')
         .attr('font-weight', 'normal')
         .text((d) => d.role)
@@ -107,7 +104,7 @@ function drawFamilyMembers() {
         .delay(500)
         .style('opacity', 0.7);
 
-    // Draw children
+    // Draw children in outer circle
     const children = svg.selectAll('.child')
         .data(familyData.children)
         .enter()
@@ -116,7 +113,7 @@ function drawFamilyMembers() {
         .attr('transform', (d) => `translate(${d.x}, ${d.y})`);
 
     children.append('circle')
-        .attr('r', 30)
+        .attr('r', 25)
         .attr('class', 'children')
         .style('opacity', 0)
         .transition()
@@ -125,7 +122,7 @@ function drawFamilyMembers() {
         .style('opacity', 1);
 
     children.append('text')
-        .attr('class', 'member-text')
+        .attr('class', 'member-text child-text')
         .attr('dy', -3)
         .text((d) => d.name)
         .style('opacity', 0)
@@ -135,8 +132,8 @@ function drawFamilyMembers() {
         .style('opacity', 1);
 
     children.append('text')
-        .attr('class', 'member-text')
-        .attr('dy', 12)
+        .attr('class', 'member-text child-role')
+        .attr('dy', 10)
         .attr('font-size', '9px')
         .attr('font-weight', 'normal')
         .text((d) => d.role)
@@ -154,7 +151,7 @@ function drawFamilyMembers() {
             d3.select(this).select('circle')
                 .transition()
                 .duration(200)
-                .attr('r', (d) => d.role === 'Mother' || d.role === 'Father' ? 40 : 35);
+                .attr('r', (d) => d.role === 'Mother' || d.role === 'Father' ? 35 : 30);
             
             tooltip
                 .style('opacity', 1)
@@ -169,7 +166,7 @@ function drawFamilyMembers() {
             d3.select(this).select('circle')
                 .transition()
                 .duration(200)
-                .attr('r', (d) => d.role === 'Mother' || d.role === 'Father' ? 35 : 30);
+                .attr('r', (d) => d.role === 'Mother' || d.role === 'Father' ? 30 : 25);
             
             tooltip
                 .style('opacity', 0);
@@ -179,31 +176,35 @@ function drawFamilyMembers() {
             d3.select(this).select('circle')
                 .transition()
                 .duration(100)
-                .attr('r', (d) => d.role === 'Mother' || d.role === 'Father' ? 45 : 40)
+                .attr('r', (d) => d.role === 'Mother' || d.role === 'Father' ? 40 : 35)
                 .transition()
                 .duration(100)
-                .attr('r', (d) => d.role === 'Mother' || d.role === 'Father' ? 35 : 30);
+                .attr('r', (d) => d.role === 'Mother' || d.role === 'Father' ? 30 : 25);
             
             console.log(`Clicked on ${d.name} (${d.role})`);
         });
 }
 
-// Add decorative elements
+// Add decorative radial elements
 function addDecorations() {
-    // Add a subtle background circle
-    svg.append('circle')
-        .attr('cx', centerX)
-        .attr('cy', centerY)
-        .attr('r', 200)
-        .attr('fill', 'none')
-        .attr('stroke', '#e0e0e0')
-        .attr('stroke-width', 1)
-        .attr('stroke-dasharray', '5,5')
-        .style('opacity', 0)
-        .transition()
-        .duration(1000)
-        .delay(1500)
-        .style('opacity', 0.3);
+    // Add subtle background circles to emphasize the radial structure
+    const circles = [80, 140, 180];
+    
+    circles.forEach((radius, index) => {
+        svg.append('circle')
+            .attr('cx', centerX)
+            .attr('cy', centerY)
+            .attr('r', radius)
+            .attr('fill', 'none')
+            .attr('stroke', '#e0e0e0')
+            .attr('stroke-width', 1)
+            .attr('stroke-dasharray', index === 0 ? 'none' : '3,3')
+            .style('opacity', 0)
+            .transition()
+            .duration(1000)
+            .delay(1500 + index * 200)
+            .style('opacity', 0.3);
+    });
 }
 
 // Initialize the visualization
