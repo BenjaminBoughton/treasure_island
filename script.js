@@ -1,4 +1,4 @@
-// Simple two-layer design
+// Simple two-layer design with rotated text
 const width = 800;
 const height = 600;
 const centerX = width / 2;
@@ -70,8 +70,8 @@ const sections = [
     }
 ];
 
-// Draw the four sections - NO inner radius, so they connect directly to center circle
-const outerRadius = 200;
+// Draw the four sections with rotated text
+const outerRadius = 220; // Increased height for better text spacing
 const innerRadius = 120; // Same as center circle radius
 
 sections.forEach((section, index) => {
@@ -90,32 +90,44 @@ sections.forEach((section, index) => {
         .attr('stroke', '#333')
         .attr('stroke-width', 2);
     
-    // Calculate text position (middle of the arc)
+    // Calculate text position and rotation
     const midAngle = (section.startAngle + section.endAngle) / 2;
     const textRadius = (innerRadius + outerRadius) / 2;
     const textX = centerX + textRadius * Math.cos(midAngle - Math.PI / 2);
     const textY = centerY + textRadius * Math.sin(midAngle - Math.PI / 2);
     
+    // Calculate rotation angle (convert to degrees)
+    let rotationAngle = (midAngle * 180 / Math.PI);
+    
+    // Adjust rotation for readability
+    if (rotationAngle > 90 && rotationAngle < 270) {
+        rotationAngle += 180; // Flip text for bottom sections
+    }
+    
+    // Create text group with rotation
+    const textGroup = svg.append('g')
+        .attr('transform', `translate(${textX}, ${textY}) rotate(${rotationAngle})`);
+    
     // Add first name
-    svg.append('text')
-        .attr('x', textX)
-        .attr('y', textY - 8)
+    textGroup.append('text')
+        .attr('x', 0)
+        .attr('y', -6)
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'middle')
         .attr('font-family', 'Arial, sans-serif')
-        .attr('font-size', '14px')
+        .attr('font-size', '12px')
         .attr('font-weight', 'bold')
         .attr('fill', '#333')
         .text(section.text1);
     
     // Add second name
-    svg.append('text')
-        .attr('x', textX)
-        .attr('y', textY + 8)
+    textGroup.append('text')
+        .attr('x', 0)
+        .attr('y', 6)
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'middle')
         .attr('font-family', 'Arial, sans-serif')
-        .attr('font-size', '14px')
+        .attr('font-size', '12px')
         .attr('font-weight', 'bold')
         .attr('fill', '#333')
         .text(section.text2);
