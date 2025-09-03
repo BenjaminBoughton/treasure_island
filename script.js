@@ -133,12 +133,12 @@ sections.forEach((section, index) => {
         .text(section.text2);
 });
 
-// Add Jim Carruthers text - positioned flush with the boundary line between Emily and Althea sections
+// Add Jim Carruthers text - positioned just below the boundary line with a buffer
 // The boundary line is at angle 3 * Math.PI / 2 (270 degrees)
 const boundaryAngle = 3 * Math.PI / 2; // This is the line between Emily and Althea sections
 const jimTextRadius = (innerRadius + outerRadius) / 2; // Middle of the section
 const jimTextX = centerX + jimTextRadius * Math.cos(boundaryAngle - Math.PI / 2);
-const jimTextY = centerY + jimTextRadius * Math.sin(boundaryAngle - Math.PI / 2);
+const jimTextY = centerY + jimTextRadius * Math.sin(boundaryAngle - Math.PI / 2) + 15; // Add buffer below the line
 
 // Simple horizontal text
 svg.append('text')
